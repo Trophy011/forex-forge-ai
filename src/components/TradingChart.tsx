@@ -24,36 +24,24 @@ const TradingChart: React.FC<TradingChartProps> = ({ pair }) => {
   const timeFrames = ['1M', '5M', '15M', '1H', '4H', '1D', '1W'];
 
   useEffect(() => {
-    // Generate realistic candlestick data
-    const generateChartData = () => {
-      const data: ChartData[] = [];
-      let basePrice = 1.0800;
-      
-      for (let i = 0; i < 100; i++) {
-        const open = basePrice + (Math.random() - 0.5) * 0.01;
-        const close = open + (Math.random() - 0.5) * 0.02;
-        const high = Math.max(open, close) + Math.random() * 0.01;
-        const low = Math.min(open, close) - Math.random() * 0.01;
-        const volume = Math.random() * 1000 + 500;
+    // Fetch real chart data from edge function
+    const generateChartData = async () => {
+      try {
+        const pairSymbol = pair.replace('/', '');
+        const response = await fetch(
+          `https://cvcjqxstkcecbazgrnmg.functions.supabase.co/forex-data/chart-data?pair=${pairSymbol}&timeframe=${timeFrame}`
+        );
+        const data = await response.json();
         
-        data.push({
-          time: new Date(Date.now() - (100 - i) * 3600000).toISOString(),
-          open,
-          high,
-          low,
-          close,
-          volume
-        });
-        
-        basePrice = close;
+        setChartData(data);
+        setCurrentPrice(data[data.length - 1]?.close || 1.0850);
+      } catch (error) {
+        console.error('Failed to fetch chart data:', error);
       }
-      
-      setChartData(data);
-      setCurrentPrice(data[data.length - 1]?.close || 1.0850);
     };
 
     generateChartData();
-    const interval = setInterval(generateChartData, 5000);
+    const interval = setInterval(generateChartData, 2000); // Update every 2 seconds for live charts
     return () => clearInterval(interval);
   }, [pair, timeFrame]);
 

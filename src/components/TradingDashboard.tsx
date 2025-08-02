@@ -9,6 +9,7 @@ import TradingChart from './TradingChart';
 import SignalPanel from './SignalPanel';
 import MarketOverview from './MarketOverview';
 import TradeExecutor from './TradeExecutor';
+import BinaryOptionsPanel from './BinaryOptionsPanel';
 
 interface CurrencyPair {
   symbol: string;
@@ -30,61 +31,53 @@ const TradingDashboard = () => {
   ];
 
   useEffect(() => {
-    // Simulate real-time market data updates
-    const updateMarketData = () => {
-      const pairs: CurrencyPair[] = currencyPairs.map(pair => {
-        const basePrice = Math.random() * 2 + 0.5;
-        const change = (Math.random() - 0.5) * 0.01;
-        return {
-          symbol: pair,
-          name: pair.replace('/', ' / '),
-          price: basePrice,
-          change: change,
-          changePercent: (change / basePrice) * 100
-        };
-      });
-      setMarketData(pairs);
+    // Fetch real forex data from our edge function
+    const updateMarketData = async () => {
+      try {
+        const response = await fetch('https://cvcjqxstkcecbazgrnmg.functions.supabase.co/forex-data/rates');
+        const rates = await response.json();
+        
+        const pairs: CurrencyPair[] = rates.map((rate: any) => ({
+          symbol: rate.symbol.substring(0, 3) + '/' + rate.symbol.substring(3),
+          name: rate.symbol.substring(0, 3) + ' / ' + rate.symbol.substring(3),
+          price: (rate.bid + rate.ask) / 2,
+          change: rate.change,
+          changePercent: rate.changePercent
+        }));
+        setMarketData(pairs);
+      } catch (error) {
+        console.error('Failed to fetch market data:', error);
+      }
     };
 
     updateMarketData();
-    const interval = setInterval(updateMarketData, 2000);
+    const interval = setInterval(updateMarketData, 1000); // Update every second for live data
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    // Generate trading signals
-    const generateSignals = () => {
-      const signals = [
-        {
-          id: 1,
-          pair: selectedPair,
-          type: 'BUY',
-          strength: 'STRONG',
-          entry: 1.0850,
-          stopLoss: 1.0800,
-          takeProfit: 1.0950,
-          probability: 85,
-          timeFrame: '1H',
-          reason: 'Bullish RSI divergence + Support level break'
-        },
-        {
-          id: 2,
-          pair: 'GBP/USD',
-          type: 'SELL',
-          strength: 'MEDIUM',
-          entry: 1.2750,
-          stopLoss: 1.2800,
-          takeProfit: 1.2650,
-          probability: 72,
-          timeFrame: '4H',
-          reason: 'Resistance rejection + Bearish pattern'
-        }
-      ];
-      setActiveSignals(signals);
+    // Fetch real AI trading signals
+    const generateSignals = async () => {
+      try {
+        const response = await fetch('https://cvcjqxstkcecbazgrnmg.functions.supabase.co/forex-data/signals');
+        const signals = await response.json();
+        
+        // Add binary options data to signals
+        const enhancedSignals = signals.map((signal: any) => ({
+          ...signal,
+          binaryExpiry: signal.binaryExpiry,
+          confidence: signal.confidence,
+          pair: signal.pair.substring(0, 3) + '/' + signal.pair.substring(3)
+        }));
+        
+        setActiveSignals(enhancedSignals);
+      } catch (error) {
+        console.error('Failed to fetch signals:', error);
+      }
     };
 
     generateSignals();
-    const signalInterval = setInterval(generateSignals, 10000);
+    const signalInterval = setInterval(generateSignals, 5000); // Update every 5 seconds
     return () => clearInterval(signalInterval);
   }, [selectedPair]);
 
@@ -157,6 +150,9 @@ const TradingDashboard = () => {
         <div className="space-y-6">
           {/* Active Signals */}
           <SignalPanel signals={activeSignals} />
+          
+          {/* Binary Options Panel */}
+          <BinaryOptionsPanel />
           
           {/* Trade Executor */}
           <TradeExecutor selectedPair={selectedPair} />
