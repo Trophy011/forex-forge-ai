@@ -52,6 +52,22 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				profit: 'hsl(var(--profit))',
+				loss: 'hsl(var(--loss))',
+				'chart-grid': 'hsl(var(--chart-grid))',
+				'chart-text': 'hsl(var(--chart-text))',
+				'trading-buy': 'hsl(var(--trading-buy))',
+				'trading-sell': 'hsl(var(--trading-sell))',
+				'signal-strong': 'hsl(var(--signal-strong))',
+				'signal-weak': 'hsl(var(--signal-weak))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
