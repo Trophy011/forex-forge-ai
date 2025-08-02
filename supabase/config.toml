@@ -1,1 +1,4 @@
 project_id = "cvcjqxstkcecbazgrnmg"
+
+[functions.forex-data]
+verify_jwt = false
