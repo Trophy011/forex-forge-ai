@@ -77,7 +77,7 @@ const TradingChart: React.FC<TradingChartProps> = ({ pair }) => {
     };
 
     generateChartData();
-    const interval = setInterval(generateChartData, 2000); // Update every 2 seconds
+    const interval = setInterval(generateChartData, 500); // Update every 500ms for live feel
     return () => clearInterval(interval);
   }, [pair, timeFrame]);
 

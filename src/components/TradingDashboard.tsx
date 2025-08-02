@@ -72,7 +72,7 @@ const TradingDashboard = () => {
     };
 
     updateMarketData();
-    const interval = setInterval(updateMarketData, 1000); // Update every second for live data
+    const interval = setInterval(updateMarketData, 300); // Update every 300ms for ultra-live data
     return () => clearInterval(interval);
   }, []);
 
@@ -122,7 +122,7 @@ const TradingDashboard = () => {
     };
 
     generateSignals();
-    const signalInterval = setInterval(generateSignals, 5000); // Update every 5 seconds
+    const signalInterval = setInterval(generateSignals, 2000); // Update every 2 seconds for fresh signals
     return () => clearInterval(signalInterval);
   }, [selectedPair]);
 
