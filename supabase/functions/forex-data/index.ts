@@ -93,96 +93,248 @@ function generateRealisticRate(pair: string, baseRate?: number): ForexRate {
   }
 }
 
-// Generate professional AI trading signals with expert analysis
-function generateAISignals(rates: ForexRate[]) {
+// Advanced AI Prediction Engine with Multiple Strategies
+function generateAdvancedAISignals(rates: ForexRate[]) {
   const signals = []
   const now = new Date()
   const hour = now.getUTCHours()
+  const minute = now.getUTCMinutes()
   
-  for (const rate of rates.slice(0, 5)) { // Generate signals for top 5 pairs
-    if (Math.random() > 0.4) { // 60% chance of signal for more activity
-      
-      // Market sentiment analysis
-      const isLondonSession = hour >= 8 && hour <= 17
-      const isNYSession = hour >= 13 && hour <= 22
-      const isOverlap = isLondonSession && isNYSession
-      
-      // Signal quality based on market session
-      let baseQuality = 50
-      if (isOverlap) baseQuality = 75 // Best signals during overlap
-      else if (isLondonSession || isNYSession) baseQuality = 65
-      
-      const volatilityFactor = Math.random() * 30
-      const probability = Math.min(95, Math.max(45, baseQuality + volatilityFactor))
-      
-      const type = Math.random() > 0.5 ? 'BUY' : 'SELL'
-      let strength: string
-      let confidence: string
-      
-      if (probability >= 80) {
-        strength = 'STRONG'
-        confidence = 'HIGH'
-      } else if (probability >= 65) {
-        strength = 'MEDIUM'
-        confidence = 'MEDIUM'
-      } else {
-        strength = 'WEAK'
-        confidence = 'LOW'
-      }
-      
-      // Calculate realistic entry, SL, TP levels
-      const currentPrice = (rate.bid + rate.ask) / 2
-      const isJPY = rate.symbol.includes('JPY')
-      const pipValue = isJPY ? 0.01 : 0.0001
-      
-      // Professional risk management (1:2 or 1:3 risk/reward)
-      const riskPips = 15 + Math.random() * 25 // 15-40 pips risk
-      const rewardMultiplier = 2 + Math.random() // 2-3x reward
-      const rewardPips = riskPips * rewardMultiplier
-      
-      const entry = currentPrice
-      const stopLoss = type === 'BUY' ? 
-        entry - riskPips * pipValue :
-        entry + riskPips * pipValue
-      const takeProfit = type === 'BUY' ? 
-        entry + rewardPips * pipValue :
-        entry - rewardPips * pipValue
-
-      // Professional timeframes based on signal strength
-      const timeFrames = strength === 'STRONG' ? ['1H', '4H'] : 
-                        strength === 'MEDIUM' ? ['15M', '1H'] : ['1M', '5M']
-
-      // Professional AI analysis reasons
-      const reasons = [
-        'Institutional order flow detected + RSI confirmation',
-        'Multi-timeframe trend alignment with volume surge',
-        'Key support/resistance level with price action confirmation',
-        'MACD histogram bullish crossover + momentum divergence',
-        'Fibonacci confluence zone with institutional interest',
-        'Smart money reversal pattern + volume profile analysis',
-        'Break and retest of major structure level',
-        'Market maker liquidity grab with retail trap completion'
-      ]
-
-      signals.push({
-        id: Math.random().toString(36).substr(2, 9),
-        pair: rate.symbol,
-        type,
-        strength,
-        entry: parseFloat(entry.toFixed(isJPY ? 2 : 4)),
-        stopLoss: parseFloat(stopLoss.toFixed(isJPY ? 2 : 4)),
-        takeProfit: parseFloat(takeProfit.toFixed(isJPY ? 2 : 4)),
-        probability: Math.round(probability),
-        timeFrame: timeFrames[Math.floor(Math.random() * timeFrames.length)],
-        reason: reasons[Math.floor(Math.random() * reasons.length)],
-        binaryExpiry: strength === 'STRONG' ? 10 + Math.floor(Math.random() * 25) : 
-                     strength === 'MEDIUM' ? 5 + Math.floor(Math.random() * 15) : 1 + Math.floor(Math.random() * 10),
-        confidence
-      })
+  for (const rate of rates) {
+    const currentPrice = (rate.bid + rate.ask) / 2
+    const isJPY = rate.symbol.includes('JPY')
+    const pipValue = isJPY ? 0.01 : 0.0001
+    
+    // Generate multiple prediction strategies
+    const strategies = generatePredictionStrategies(rate, currentPrice, isJPY, pipValue)
+    
+    // Select best strategy based on market conditions
+    const bestStrategy = selectOptimalStrategy(strategies, hour, minute)
+    
+    if (bestStrategy) {
+      signals.push(bestStrategy)
     }
   }
   
-  return signals
+  return signals.slice(0, 8) // Return top 8 signals
+}
+
+// Strategy 1: Extreme AI Prediction with Neural Network Simulation
+function generateExtremeAIPrediction(rate: ForexRate, currentPrice: number, isJPY: boolean, pipValue: number) {
+  // Simulate advanced AI neural network analysis
+  const marketCycles = [
+    { phase: 'accumulation', strength: 0.85, direction: 1 },
+    { phase: 'markup', strength: 0.92, direction: 1 },
+    { phase: 'distribution', strength: 0.78, direction: -1 },
+    { phase: 'markdown', strength: 0.89, direction: -1 }
+  ]
+  
+  const currentCycle = marketCycles[Math.floor(Math.random() * marketCycles.length)]
+  const aiConfidence = 75 + Math.random() * 20 // 75-95% AI confidence
+  
+  // AI pattern recognition
+  const patterns = [
+    'AI-detected institutional accumulation pattern',
+    'Neural network confirms breakout imminent',
+    'Machine learning algorithm detects reversal signals',
+    'Deep learning model shows 89% probability setup',
+    'AI sentiment analysis indicates strong momentum',
+    'Quantum computing prediction model activated'
+  ]
+  
+  const type = currentCycle.direction > 0 ? 'BUY' : 'SELL'
+  const riskPips = 12 + Math.random() * 18 // Tight AI stops
+  const rewardPips = riskPips * (2.5 + Math.random() * 1.5) // 2.5-4x reward
+  
+  return {
+    id: Math.random().toString(36).substr(2, 9),
+    pair: rate.symbol,
+    type,
+    strategy: 'EXTREME_AI',
+    strength: 'MAXIMUM',
+    entry: parseFloat(currentPrice.toFixed(isJPY ? 2 : 4)),
+    stopLoss: parseFloat((type === 'BUY' ? currentPrice - riskPips * pipValue : currentPrice + riskPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    takeProfit: parseFloat((type === 'BUY' ? currentPrice + rewardPips * pipValue : currentPrice - rewardPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    probability: Math.round(aiConfidence),
+    timeFrame: ['5M', '15M', '1H'][Math.floor(Math.random() * 3)],
+    reason: patterns[Math.floor(Math.random() * patterns.length)],
+    binaryExpiry: 3 + Math.floor(Math.random() * 12),
+    confidence: 'EXTREME',
+    momentum: calculateMomentum(rate),
+    trendStrength: currentCycle.strength,
+    supportResistance: calculateSupportResistance(currentPrice, isJPY)
+  }
+}
+
+// Strategy 2: Trend Following Strategy
+function generateTrendStrategy(rate: ForexRate, currentPrice: number, isJPY: boolean, pipValue: number) {
+  // Simulate multiple timeframe trend analysis
+  const trends = {
+    '1M': Math.random() > 0.5 ? 'BULLISH' : 'BEARISH',
+    '5M': Math.random() > 0.5 ? 'BULLISH' : 'BEARISH',
+    '15M': Math.random() > 0.5 ? 'BULLISH' : 'BEARISH',
+    '1H': Math.random() > 0.5 ? 'BULLISH' : 'BEARISH',
+    '4H': Math.random() > 0.5 ? 'BULLISH' : 'BEARISH'
+  }
+  
+  // Count bullish vs bearish trends
+  const bullishCount = Object.values(trends).filter(t => t === 'BULLISH').length
+  const trendAlignment = bullishCount >= 3 ? 'BULLISH' : bullishCount <= 2 ? 'BEARISH' : 'SIDEWAYS'
+  
+  if (trendAlignment === 'SIDEWAYS') return null
+  
+  const trendStrength = Math.abs(bullishCount - 2.5) / 2.5 // 0-1 strength
+  const confidence = 60 + trendStrength * 30 // 60-90% based on alignment
+  
+  const type = trendAlignment === 'BULLISH' ? 'BUY' : 'SELL'
+  const riskPips = 20 + Math.random() * 20
+  const rewardPips = riskPips * (2 + trendStrength)
+  
+  return {
+    id: Math.random().toString(36).substr(2, 9),
+    pair: rate.symbol,
+    type,
+    strategy: 'TREND_FOLLOWING',
+    strength: trendStrength > 0.7 ? 'STRONG' : trendStrength > 0.4 ? 'MEDIUM' : 'WEAK',
+    entry: parseFloat(currentPrice.toFixed(isJPY ? 2 : 4)),
+    stopLoss: parseFloat((type === 'BUY' ? currentPrice - riskPips * pipValue : currentPrice + riskPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    takeProfit: parseFloat((type === 'BUY' ? currentPrice + rewardPips * pipValue : currentPrice - rewardPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    probability: Math.round(confidence),
+    timeFrame: '1H',
+    reason: `Multi-timeframe trend alignment: ${bullishCount}/5 timeframes ${trendAlignment.toLowerCase()}`,
+    binaryExpiry: 15 + Math.floor(Math.random() * 20),
+    confidence: trendStrength > 0.7 ? 'HIGH' : 'MEDIUM',
+    momentum: calculateMomentum(rate),
+    trendStrength: trendStrength,
+    supportResistance: calculateSupportResistance(currentPrice, isJPY)
+  }
+}
+
+// Strategy 3: Momentum & Oscillator Strategy
+function generateMomentumStrategy(rate: ForexRate, currentPrice: number, isJPY: boolean, pipValue: number) {
+  // Simulate momentum indicators
+  const rsi = 20 + Math.random() * 60 // RSI 20-80
+  const macd = -0.5 + Math.random() // MACD histogram
+  const stochastic = Math.random() * 100
+  const momentum = calculateMomentum(rate)
+  
+  // Momentum conditions
+  const isMomentumBullish = (rsi < 30 && macd > 0) || (rsi > 70 && momentum > 0.7)
+  const isMomentumBearish = (rsi > 70 && macd < 0) || (rsi < 30 && momentum < -0.7)
+  
+  if (!isMomentumBullish && !isMomentumBearish) return null
+  
+  const type = isMomentumBullish ? 'BUY' : 'SELL'
+  const momentumStrength = Math.abs(momentum)
+  const confidence = 55 + momentumStrength * 35
+  
+  const riskPips = 15 + Math.random() * 15
+  const rewardPips = riskPips * (1.8 + momentumStrength)
+  
+  return {
+    id: Math.random().toString(36).substr(2, 9),
+    pair: rate.symbol,
+    type,
+    strategy: 'MOMENTUM',
+    strength: momentumStrength > 0.6 ? 'STRONG' : 'MEDIUM',
+    entry: parseFloat(currentPrice.toFixed(isJPY ? 2 : 4)),
+    stopLoss: parseFloat((type === 'BUY' ? currentPrice - riskPips * pipValue : currentPrice + riskPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    takeProfit: parseFloat((type === 'BUY' ? currentPrice + rewardPips * pipValue : currentPrice - rewardPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    probability: Math.round(confidence),
+    timeFrame: '15M',
+    reason: `Momentum divergence detected: RSI ${rsi.toFixed(1)}, MACD ${macd > 0 ? 'bullish' : 'bearish'}`,
+    binaryExpiry: 8 + Math.floor(Math.random() * 12),
+    confidence: momentumStrength > 0.6 ? 'HIGH' : 'MEDIUM',
+    momentum: momentum,
+    trendStrength: momentumStrength,
+    supportResistance: calculateSupportResistance(currentPrice, isJPY)
+  }
+}
+
+// Strategy 4: Support & Resistance Strategy
+function generateSupportResistanceStrategy(rate: ForexRate, currentPrice: number, isJPY: boolean, pipValue: number) {
+  const sr = calculateSupportResistance(currentPrice, isJPY)
+  
+  // Check if price is near support or resistance
+  const nearSupport = Math.abs(currentPrice - sr.support) < (10 * pipValue)
+  const nearResistance = Math.abs(currentPrice - sr.resistance) < (10 * pipValue)
+  
+  if (!nearSupport && !nearResistance) return null
+  
+  const type = nearSupport ? 'BUY' : 'SELL'
+  const distanceToLevel = nearSupport ? 
+    Math.abs(currentPrice - sr.support) : 
+    Math.abs(currentPrice - sr.resistance)
+  
+  const proximity = 1 - (distanceToLevel / (10 * pipValue)) // 0-1, closer = higher
+  const confidence = 65 + proximity * 25
+  
+  const riskPips = 8 + Math.random() * 12 // Tight stops at S/R
+  const rewardPips = riskPips * (3 + proximity) // Higher reward at key levels
+  
+  return {
+    id: Math.random().toString(36).substr(2, 9),
+    pair: rate.symbol,
+    type,
+    strategy: 'SUPPORT_RESISTANCE',
+    strength: proximity > 0.7 ? 'STRONG' : 'MEDIUM',
+    entry: parseFloat(currentPrice.toFixed(isJPY ? 2 : 4)),
+    stopLoss: parseFloat((type === 'BUY' ? currentPrice - riskPips * pipValue : currentPrice + riskPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    takeProfit: parseFloat((type === 'BUY' ? currentPrice + rewardPips * pipValue : currentPrice - rewardPips * pipValue).toFixed(isJPY ? 2 : 4)),
+    probability: Math.round(confidence),
+    timeFrame: '5M',
+    reason: `Price at key ${nearSupport ? 'support' : 'resistance'} level: ${nearSupport ? sr.support.toFixed(isJPY ? 2 : 4) : sr.resistance.toFixed(isJPY ? 2 : 4)}`,
+    binaryExpiry: 3 + Math.floor(Math.random() * 8),
+    confidence: proximity > 0.7 ? 'HIGH' : 'MEDIUM',
+    momentum: calculateMomentum(rate),
+    trendStrength: proximity,
+    supportResistance: sr
+  }
+}
+
+// Helper Functions
+function generatePredictionStrategies(rate: ForexRate, currentPrice: number, isJPY: boolean, pipValue: number) {
+  const strategies = []
+  
+  // Generate each strategy with probability
+  if (Math.random() > 0.3) strategies.push(generateExtremeAIPrediction(rate, currentPrice, isJPY, pipValue))
+  if (Math.random() > 0.4) strategies.push(generateTrendStrategy(rate, currentPrice, isJPY, pipValue))
+  if (Math.random() > 0.5) strategies.push(generateMomentumStrategy(rate, currentPrice, isJPY, pipValue))
+  if (Math.random() > 0.6) strategies.push(generateSupportResistanceStrategy(rate, currentPrice, isJPY, pipValue))
+  
+  return strategies.filter(s => s !== null)
+}
+
+function selectOptimalStrategy(strategies: any[], hour: number, minute: number) {
+  if (strategies.length === 0) return null
+  
+  // Weight strategies based on market conditions
+  const sessionMultiplier = (hour >= 8 && hour <= 17) || (hour >= 13 && hour <= 22) ? 1.2 : 0.8
+  
+  return strategies.reduce((best, current) => {
+    const currentScore = current.probability * sessionMultiplier * current.trendStrength
+    const bestScore = best ? best.probability * sessionMultiplier * best.trendStrength : 0
+    return currentScore > bestScore ? current : best
+  }, null)
+}
+
+function calculateMomentum(rate: ForexRate): number {
+  // Simulate momentum calculation based on price change and volatility
+  const baseChange = rate.changePercent / 100
+  const volatilityFactor = Math.random() * 0.5 - 0.25 // -0.25 to 0.25
+  return Math.max(-1, Math.min(1, baseChange * 10 + volatilityFactor))
+}
+
+function calculateSupportResistance(currentPrice: number, isJPY: boolean) {
+  const range = isJPY ? 1.0 : 0.01
+  const support = currentPrice - (Math.random() * range * 0.5)
+  const resistance = currentPrice + (Math.random() * range * 0.5)
+  
+  return {
+    support: parseFloat(support.toFixed(isJPY ? 2 : 4)),
+    resistance: parseFloat(resistance.toFixed(isJPY ? 2 : 4)),
+    strength: 0.6 + Math.random() * 0.4 // 0.6-1.0
+  }
 }
 
 // Generate market analysis
@@ -226,9 +378,9 @@ serve(async (req) => {
         })
 
       case 'signals':
-        // Get AI trading signals
+        // Get Advanced AI trading signals
         const currentRates = MAJOR_PAIRS.map(pair => generateRealisticRate(pair))
-        const signals = generateAISignals(currentRates)
+        const signals = generateAdvancedAISignals(currentRates)
         return new Response(JSON.stringify(signals), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
